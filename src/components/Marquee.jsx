@@ -24,7 +24,7 @@ const Marquee = () => {
                 <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-brown-100 to-transparent z-10"></div>
 
                 <motion.div
-                    className="flex space-x-6"
+                    className="flex space-x-6 will-change-transform"
                     animate={{
                         x: [0, -1920],
                     }}

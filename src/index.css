@@ -137,10 +137,8 @@ html {
 }
 
 /* Performance optimizations */
-.category-card {
-  will-change: transform;
-  transform: translateZ(0);
-}
+/* Performance optimizations */
+/* .category-card class removed in favor of utility classes */
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {

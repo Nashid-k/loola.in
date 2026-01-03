@@ -1,17 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FiWatch, FiHeart, FiBox, FiStar } from 'react-icons/fi';
-import { GiDiamondRing, GiNecklace } from 'react-icons/gi';
+import { PiWatchLight, PiHeartLight, PiHandbagLight, PiStarLight, PiDiamondLight, PiSketchLogoLight } from 'react-icons/pi';
 import { fadeInUp, staggerContainer } from '../utils/animations';
 
 const categories = [
-    { icon: GiDiamondRing, name: 'Rings', count: '45+', color: 'from-gold-400 to-gold-600' },
-    { icon: GiNecklace, name: 'Necklaces', count: '32+', color: 'from-brown-400 to-brown-600' },
-    { icon: FiHeart, name: 'Bracelets', count: '28+', color: 'from-gold-500 to-brown-500' },
-    { icon: FiWatch, name: 'Watches', count: '18+', color: 'from-brown-500 to-gold-500' },
-    { icon: FiBox, name: 'Accessories', count: '40+', color: 'from-gold-400 to-brown-400' },
-    { icon: FiStar, name: 'Premium', count: '15+', color: 'from-brown-600 to-gold-700' },
+    { icon: PiDiamondLight, name: 'Rings', count: '45+', color: 'from-gold-400 to-gold-600' },
+    { icon: PiSketchLogoLight, name: 'Necklaces', count: '32+', color: 'from-brown-400 to-brown-600' },
+    { icon: PiHeartLight, name: 'Bracelets', count: '28+', color: 'from-gold-500 to-brown-500' },
+    { icon: PiWatchLight, name: 'Watches', count: '18+', color: 'from-brown-500 to-gold-500' },
+    { icon: PiHandbagLight, name: 'Accessories', count: '40+', color: 'from-gold-400 to-brown-400' },
+    { icon: PiStarLight, name: 'Premium', count: '15+', color: 'from-brown-600 to-gold-700' },
 ];
 
 const Categories = () => {
@@ -78,14 +77,14 @@ const Categories = () => {
                                 whileTap={{ scale: 0.95 }}
                                 className="cursor-pointer"
                             >
-                                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg hover:shadow-2xl transition-all duration-300 relative overflow-hidden group">
+                                <div className="bg-white/40 backdrop-blur-md rounded-2xl p-6 text-center shadow-lg hover:shadow-2xl transition-all duration-300 relative overflow-hidden group border border-white/30 will-change-transform">
                                     {/* Animated gradient background on hover */}
                                     <motion.div
                                         className={`absolute inset-0 bg-gradient-to-r ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
                                     />
 
                                     <motion.div
-                                        className={`w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r ${category.color} flex items-center justify-center relative z-10`}
+                                        className={`w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r ${category.color} flex items-center justify-center relative z-10 shadow-inner`}
                                         whileHover={{ rotate: 360 }}
                                         transition={{ duration: 0.6 }}
                                     >
@@ -96,7 +95,7 @@ const Categories = () => {
                                         {category.name}
                                     </h3>
                                     <motion.p
-                                        className="text-sm text-gold-600 font-medium relative z-10"
+                                        className="text-sm text-gold-700 font-medium relative z-10"
                                         whileHover={{ scale: 1.1 }}
                                     >
                                         {category.count} Items

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FiStar } from 'react-icons/fi';
+import { PiStarFill } from 'react-icons/pi';
 import { fadeInUp, staggerContainer } from '../utils/animations';
 
 const testimonials = [
@@ -99,7 +99,7 @@ const Testimonials = () => {
                                         animate={inView ? { scale: 1, rotate: 0 } : { scale: 0, rotate: -180 }}
                                         transition={{ delay: 0.6 + index * 0.1 + i * 0.05, type: 'spring' }}
                                     >
-                                        <FiStar className="w-5 h-5 text-gold-500 fill-gold-500" />
+                                        <PiStarFill className="w-5 h-5 text-gold-500" />
                                     </motion.div>
                                 ))}
                             </motion.div>

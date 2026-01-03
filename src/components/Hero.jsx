@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FiArrowRight, FiStar } from 'react-icons/fi';
+import { PiArrowRightLight, PiStarFill } from 'react-icons/pi';
 import AnimatedCounter from './AnimatedCounter';
 import FloatingShapes from './FloatingShapes';
 import { fadeInUp, slideInLeft, slideInRight } from '../utils/animations';
@@ -76,7 +76,7 @@ const Hero = () => {
                                         animate={{ opacity: 1, scale: 1 }}
                                         transition={{ delay: 0.3 + i * 0.1, duration: 0.3 }}
                                     >
-                                        <FiStar className="w-5 h-5 text-gold-500 fill-gold-500" />
+                                        <PiStarFill className="w-5 h-5 text-gold-500" />
                                     </motion.div>
                                 ))}
                             </div>
@@ -117,7 +117,7 @@ const Hero = () => {
                             >
                                 <span className="relative z-10 flex items-center justify-center">
                                     Shop Collection
-                                    <FiArrowRight className="inline-block ml-2 group-hover:translate-x-1 transition-transform" />
+                                    <PiArrowRightLight className="inline-block ml-2 group-hover:translate-x-1 transition-transform" />
                                 </span>
                                 <motion.div
                                     className="absolute inset-0 bg-gradient-to-r from-gold-600 to-gold-700"
