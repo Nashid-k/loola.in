@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FiShoppingCart, FiHeart, FiEye, FiArrowRight } from 'react-icons/fi';
+import { PiShoppingBagLight, PiHeartLight, PiHeartFill, PiEyeLight, PiArrowRightLight } from 'react-icons/pi';
 import { ProductCardSkeleton } from './Skeleton';
 import { fadeInUp, staggerContainer } from '../utils/animations';
 import product1 from '../assets/images/product-1.jpg';
@@ -78,7 +78,6 @@ const ProductCard = ({ product }) => {
                 window.dispatchEvent(new CustomEvent('addToCart', { detail: product }));
             }, 800);
         } else {
-            // Fallback if cart not found
             setIsAdding(false);
             window.dispatchEvent(new CustomEvent('addToCart', { detail: product }));
         }
@@ -87,26 +86,10 @@ const ProductCard = ({ product }) => {
     return (
         <motion.div
             variants={fadeInUp}
-            className="group cursor-pointer flex flex-col h-full bg-white rounded-2xl overflow-hidden border border-brown-100 transition-all duration-300 hover:shadow-xl hover:border-gold-200 hover:-translate-y-1 will-change-transform"
+            className="group cursor-pointer flex flex-col h-full bg-white rounded-2xl overflow-hidden border border-brown-100/50 transition-all duration-300 hover:shadow-2xl hover:border-gold-200/50 hover:-translate-y-1 will-change-transform"
         >
             {/* Image Container */}
             <div className="relative overflow-hidden aspect-[4/5] bg-gray-50 border-b border-brown-50">
-                <img
-                    src={product.image}
-                    alt={product.name}
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out will-change-transform group-hover:scale-110"
-                    style={{
-                        ...product.imageStyle,
-                        transform: product.imageStyle?.transform ? undefined : '', // Let CSS handle scale unless specific style overrides
-                        objectPosition: product.imageStyle?.objectPosition || 'center'
-                    }}
-                />
-                {/* Explicitly apply the scale transform via inline style if it exists in the product data, combined with hover logic via CSS is tricky. 
-                    Actually, for the specific products with 'scale(1.4)', we should apply that as the base. 
-                    Let's use a wrapper for the CSS hover zoom to avoid conflict, or simple CSS variable.
-                 */}
-                {/* Re-implementing image logic to support the custom scale + hover zoom cleanly */}
                 <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105"
                     style={product.imageStyle?.transform ? { transform: product.imageStyle.transform } : {}}
                 >
@@ -119,11 +102,10 @@ const ProductCard = ({ product }) => {
                     />
                 </div>
 
-
                 {/* Badges */}
                 <div className="absolute top-3 left-3 md:top-4 md:left-4 z-10 flex flex-col gap-2 pointer-events-none">
                     {product.badge && (
-                        <span className="bg-white/95 backdrop-blur-sm text-brown-900 text-[8px] md:text-[10px] font-bold px-2 py-1 md:px-3 md:py-1 uppercase tracking-[0.2em] shadow-sm rounded-sm">
+                        <span className="bg-white/80 backdrop-blur-md text-brown-900 text-[8px] md:text-[10px] font-bold px-2 py-1 md:px-3 md:py-1 uppercase tracking-[0.2em] shadow-sm rounded-sm border border-white/20">
                             {product.badge}
                         </span>
                     )}
@@ -135,35 +117,37 @@ const ProductCard = ({ product }) => {
                         e.stopPropagation();
                         setIsLiked(!isLiked);
                     }}
-                    className="absolute top-3 right-3 md:top-4 md:right-4 p-1.5 md:p-2 bg-white/60 backdrop-blur-sm rounded-full text-brown-800 hover:bg-white hover:text-gold-500 transition-all duration-300 z-20 shadow-sm active:scale-90"
+                    className="absolute top-3 right-3 md:top-4 md:right-4 p-2 bg-white/70 backdrop-blur-md rounded-full text-brown-800 hover:bg-white hover:text-gold-500 transition-all duration-300 z-20 shadow-sm active:scale-90 border border-white/40"
                     aria-label="Add to wishlist"
                 >
-                    <FiHeart
-                        className={`w-4 h-4 md:w-5 md:h-5 transition-colors duration-300 ${isLiked ? 'fill-gold-500 text-gold-500' : 'stroke-current stroke-[1.5]'}`}
-                    />
+                    {isLiked ? (
+                        <PiHeartFill className="w-5 h-5 text-gold-500" />
+                    ) : (
+                        <PiHeartLight className="w-5 h-5 stroke-[1.5]" />
+                    )}
                 </button>
 
                 {/* Mobile Cart Button */}
                 <button
                     onClick={handleAddToCart}
-                    className="lg:hidden absolute bottom-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full text-brown-900 shadow-sm z-20 active:scale-95 transition-transform"
+                    className="lg:hidden absolute bottom-3 right-3 p-2 bg-white/90 backdrop-blur-md rounded-full text-brown-900 shadow-sm z-20 active:scale-95 transition-transform border border-white/40"
                 >
-                    <FiShoppingCart className="w-4 h-4" />
+                    <PiShoppingBagLight className="w-5 h-5" />
                 </button>
 
                 {/* Desktop Hover Action - Slide Up with CSS */}
-                <div className="hidden lg:block absolute bottom-0 left-0 right-0 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10 will-change-transform">
+                <div className="hidden lg:block absolute bottom-0 left-0 right-0 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-[0.22, 1, 0.36, 1] z-10 will-change-transform">
                     <button
                         onClick={handleAddToCart}
                         disabled={isAdding}
-                        className="w-full bg-white/95 backdrop-blur-md text-brown-900 py-4 font-medium uppercase text-xs tracking-[0.15em] hover:bg-brown-900 hover:text-white transition-colors flex items-center justify-center gap-2 border-t border-brown-100"
+                        className="w-full bg-white/90 backdrop-blur-xl text-brown-900 py-4 font-medium uppercase text-xs tracking-[0.15em] hover:bg-brown-900 hover:text-white transition-colors flex items-center justify-center gap-2 border-t border-white/20"
                     >
                         {isAdding ? (
                             <span className="animate-pulse">Adding...</span>
                         ) : (
                             <>
                                 <span>Add to Cart</span>
-                                <FiArrowRight className="w-4 h-4" />
+                                <PiArrowRightLight className="w-4 h-4" />
                             </>
                         )}
                     </button>
