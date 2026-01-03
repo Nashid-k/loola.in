@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@200;300;400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #fef9f3;
+
+  --color-gold-50: #fefaf5;
+  --color-gold-100: #fdf5eb;
+  --color-gold-200: #fae6cd;
+  --color-gold-300: #f6d8af;
+  --color-gold-400: #f0ba73;
+  --color-gold-500: #e99d37;
+  --color-gold-600: #d88d31;
+  --color-gold-700: #b47529;
+  --color-gold-800: #905e21;
+  --color-gold-900: #764d1b;
+
+  --color-brown-50: #f8f6f4;
+  --color-brown-100: #f0ede9;
+  --color-brown-200: #dad2c8;
+  --color-brown-300: #c4b7a7;
+  --color-brown-400: #988165;
+  --color-brown-500: #6c4b23;
+  --color-brown-600: #614320;
+  --color-brown-700: #51381b;
+  --color-brown-800: #412d16;
+  --color-brown-900: #352512;
+
+  --font-family-sans: 'Outfit', sans-serif;
+  --font-family-serif: 'Cormorant Garamond', serif;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-brown-900);
+  font-family: var(--font-family-sans);
+}
+
+.btn-primary {
+  background: linear-gradient(to right, var(--color-gold-500), var(--color-gold-600));
+  color: white;
+  font-weight: 500;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  transition: all 0.3s;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(to right, var(--color-gold-600), var(--color-gold-700));
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  transform: scale(1.05);
+}
+
+.btn-secondary {
+  border: 2px solid var(--color-gold-500);
+  color: var(--color-gold-600);
+  font-weight: 500;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-gold-500);
+  color: white;
+}
+
+.section-title {
+  font-family: var(--font-family-serif);
+  font-size: 3rem;
+  color: var(--color-brown-800);
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 3.75rem;
+  }
+}
+
+.product-card {
+  background-color: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  transition: all 0.3s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card:hover {
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  transform: translateY(-0.5rem);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.shimmer {
+  background: linear-gradient(90deg,
+      rgba(233, 157, 55, 0.1) 0%,
+      rgba(233, 157, 55, 0.3) 50%,
+      rgba(233, 157, 55, 0.1) 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 3s infinite;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Performance optimizations */
+.category-card {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--color-gold-500), var(--color-gold-600));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, var(--color-gold-600), var(--color-gold-700));
+}
+
+/* Prevent layout shift */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Backdrop blur support */
+@supports (backdrop-filter: blur(10px)) {
+  .backdrop-blur-sm {
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-gold-500), var(--color-brown-600));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
