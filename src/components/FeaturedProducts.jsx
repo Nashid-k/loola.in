@@ -26,7 +26,7 @@ const products = [
     { id: 10, name: 'Lattice Band Ring', price: 849, image: product10, category: 'Rings' },
 ];
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, index }) => {
     const [isLiked, setIsLiked] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
 
@@ -37,6 +37,7 @@ const ProductCard = ({ product }) => {
 
         setIsAdding(true);
 
+        // Fly-to-cart animation logic
         const button = e.currentTarget;
         const buttonRect = button.getBoundingClientRect();
         const cartIcon = document.querySelector('.cart-icon');
@@ -57,122 +58,90 @@ const ProductCard = ({ product }) => {
                 box-shadow: 0 4px 12px rgba(233, 157, 55, 0.4);
                 transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
             `;
-
             document.body.appendChild(flyingItem);
 
-            // Trigger reflow
-            void flyingItem.offsetWidth;
-
             requestAnimationFrame(() => {
-                flyingItem.style.left = `${cartRect.left + 10}px`;
-                flyingItem.style.top = `${cartRect.top + 10}px`;
-                flyingItem.style.transform = 'scale(0.2)';
+                flyingItem.style.left = `${cartRect.left + cartRect.width / 2}px`;
+                flyingItem.style.top = `${cartRect.top + cartRect.height / 2}px`;
                 flyingItem.style.opacity = '0';
+                flyingItem.style.transform = 'scale(0.5)';
             });
 
-            setTimeout(() => {
-                if (document.body.contains(flyingItem)) {
-                    document.body.removeChild(flyingItem);
-                }
-                setIsAdding(false);
-                window.dispatchEvent(new CustomEvent('addToCart', { detail: product }));
-            }, 800);
-        } else {
-            setIsAdding(false);
-            window.dispatchEvent(new CustomEvent('addToCart', { detail: product }));
+            setTimeout(() => document.body.removeChild(flyingItem), 800);
         }
+
+        setTimeout(() => setIsAdding(false), 800); // Reset state
     };
 
+    // Standard Card Layout
     return (
         <motion.div
             variants={fadeInUp}
-            className="group cursor-pointer flex flex-col h-full bg-white rounded-2xl overflow-hidden border border-brown-100/50 transition-all duration-300 hover:shadow-2xl hover:border-gold-200/50 hover:-translate-y-1 will-change-transform"
+            className="group cursor-pointer flex flex-col h-full bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 will-change-transform"
         >
             {/* Image Container */}
-            <div className="relative overflow-hidden aspect-[4/5] bg-gray-50 border-b border-brown-50">
-                <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105"
-                    style={product.imageStyle?.transform ? { transform: product.imageStyle.transform } : {}}
-                >
-                    <img
-                        src={product.image}
-                        alt={product.name}
-                        loading="lazy"
-                        className="w-full h-full object-cover"
-                        style={{ objectPosition: product.imageStyle?.objectPosition || 'center' }}
-                    />
-                </div>
+            <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
+                <img
+                    src={product.image}
+                    alt={product.name}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                />
 
-                {/* Badges */}
-                <div className="absolute top-3 left-3 md:top-4 md:left-4 z-10 flex flex-col gap-2 pointer-events-none">
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                {/* Top Badges */}
+                <div className="absolute top-3 left-3 flex flex-col gap-2">
                     {product.badge && (
-                        <span className="bg-white/80 backdrop-blur-md text-brown-900 text-[8px] md:text-[10px] font-bold px-2 py-1 md:px-3 md:py-1 uppercase tracking-[0.2em] shadow-sm rounded-sm border border-white/20">
+                        <span className="bg-white/90 backdrop-blur-sm text-brown-900 text-[10px] font-bold px-2 py-1 uppercase tracking-widest rounded-sm shadow-sm">
                             {product.badge}
                         </span>
                     )}
                 </div>
 
-                {/* Wishlist Button */}
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setIsLiked(!isLiked);
-                    }}
-                    className="absolute top-3 right-3 md:top-4 md:right-4 p-2 bg-white/70 backdrop-blur-md rounded-full text-brown-800 hover:bg-white hover:text-gold-500 transition-all duration-300 z-20 shadow-sm active:scale-90 border border-white/40"
-                    aria-label="Add to wishlist"
-                >
-                    {isLiked ? (
-                        <PiHeartFill className="w-5 h-5 text-gold-500" />
-                    ) : (
-                        <PiHeartLight className="w-5 h-5 stroke-[1.5]" />
-                    )}
-                </button>
-
-                {/* Mobile Cart Button */}
-                <button
-                    onClick={handleAddToCart}
-                    className="lg:hidden absolute bottom-3 right-3 p-2 bg-white/90 backdrop-blur-md rounded-full text-brown-900 shadow-sm z-20 active:scale-95 transition-transform border border-white/40"
-                >
-                    <PiShoppingBagLight className="w-5 h-5" />
-                </button>
-
-                {/* Desktop Hover Action - Slide Up with CSS */}
-                <div className="hidden lg:block absolute bottom-0 left-0 right-0 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-[0.22, 1, 0.36, 1] z-10 will-change-transform">
+                {/* Action Buttons (Right) */}
+                <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsLiked(!isLiked);
+                        }}
+                        className="p-2.5 bg-white text-brown-900 rounded-full hover:bg-gold-500 hover:text-white transition-colors shadow-md"
+                    >
+                        {isLiked ? <PiHeartFill className="w-4 h-4 text-gold-500" /> : <PiHeartLight className="w-4 h-4" />}
+                    </button>
                     <button
                         onClick={handleAddToCart}
-                        disabled={isAdding}
-                        className="w-full bg-white/90 backdrop-blur-xl text-brown-900 py-4 font-medium uppercase text-xs tracking-[0.15em] hover:bg-brown-900 hover:text-white transition-colors flex items-center justify-center gap-2 border-t border-white/20"
+                        className="p-2.5 bg-white text-brown-900 rounded-full hover:bg-gold-500 hover:text-white transition-colors shadow-md delay-75"
                     >
-                        {isAdding ? (
-                            <span className="animate-pulse">Adding...</span>
-                        ) : (
-                            <>
-                                <span>Add to Cart</span>
-                                <PiArrowRightLight className="w-4 h-4" />
-                            </>
-                        )}
+                        <PiShoppingBagLight className="w-4 h-4" />
+                    </button>
+                </div>
+
+                {/* Quick View Button (Bottom Center) */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                    <button className="bg-white/90 backdrop-blur-xl text-brown-900 px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-brown-900 hover:text-white transition-colors shadow-lg whitespace-nowrap">
+                        Quick View
                     </button>
                 </div>
             </div>
 
             {/* Product Info */}
-            <div className="flex flex-col flex-grow p-3 md:p-5">
-                <div className="flex justify-between items-start">
-                    <div className="space-y-1 w-full">
-                        <p className="text-[8px] md:text-[10px] font-bold text-gold-600 uppercase tracking-widest">
-                            {product.category}
-                        </p>
-                        <h3 className="text-sm md:text-lg font-serif text-brown-900 leading-tight group-hover:text-gold-600 transition-colors duration-300 truncate">
-                            {product.name}
-                        </h3>
-                    </div>
+            <div className="p-5 flex flex-col flex-grow bg-white">
+                <div className="mb-1">
+                    <p className="text-[10px] font-bold text-gold-600 uppercase tracking-widest">
+                        {product.category}
+                    </p>
                 </div>
-                <div className="mt-auto pt-3 md:pt-4 flex items-center justify-between border-t border-brown-50">
-                    <span className="font-serif text-base md:text-lg font-medium text-brown-900">
+                <h3 className="font-serif text-lg text-brown-900 leading-tight group-hover:text-gold-600 transition-colors duration-300 mb-2 truncate">
+                    {product.name}
+                </h3>
+                <div className="mt-auto flex items-center justify-between">
+                    <span className="font-serif text-lg font-medium text-brown-900">
                         ₹{product.price}
                     </span>
-                    <span className="hidden md:inline-block text-xs text-brown-400 font-medium tracking-wide group-hover:text-brown-600 transition-colors opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 duration-300">
-                        View Details
-                    </span>
+                    <div className="w-8 h-[1px] bg-brown-200 group-hover:w-12 group-hover:bg-gold-500 transition-all duration-300" />
                 </div>
             </div>
         </motion.div>
@@ -187,49 +156,50 @@ const FeaturedProducts = () => {
     });
 
     return (
-        <section id="products" className="py-12 md:py-24 px-4 bg-cream/30">
-            <div className="max-w-7xl mx-auto">
+        <section id="products" className="py-24 px-4 bg-cream relative overflow-hidden">
+            {/* Atmospheric Background Element */}
+            <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-gold-50 to-transparent pointer-events-none opacity-50" />
+
+            <div className="max-w-7xl mx-auto relative z-10">
                 <motion.div
                     ref={ref}
-                    className="text-center mb-10 md:mb-16"
+                    className="flex flex-col md:flex-row justify-between items-end mb-12 md:mb-20 gap-6"
                     initial={{ opacity: 0, y: 30 }}
                     animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                     transition={{ duration: 0.6 }}
                 >
-                    <span className="text-gold-600 text-xs md:text-sm font-medium tracking-widest uppercase mb-2 block">
-                        Our Collection
-                    </span>
-                    <h2 className="font-serif text-3xl md:text-5xl text-brown-900 mb-4">
-                        Curated Elegance
-                    </h2>
-                    <div className="w-16 md:w-24 h-1 bg-gradient-to-r from-gold-400 to-gold-600 mx-auto rounded-full" />
+                    <div className="max-w-2xl">
+                        <span className="text-gold-600 text-sm font-medium tracking-[0.2em] uppercase mb-4 block">
+                            Discover
+                        </span>
+                        <h2 className="font-serif text-4xl md:text-6xl text-brown-900 leading-none">
+                            The Collection
+                        </h2>
+                    </div>
+
+                    <button className="hidden md:flex items-center gap-3 text-brown-900 font-medium hover:text-gold-600 transition-colors group">
+                        <span className="border-b border-brown-900 group-hover:border-gold-600 pb-0.5 transition-colors">View Full Catalog</span>
+                        <PiArrowRightLight className="group-hover:translate-x-1 transition-transform" />
+                    </button>
                 </motion.div>
 
                 <motion.div
-                    className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 lg:gap-8 gap-y-8 md:gap-y-12"
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
                     variants={staggerContainer}
                     initial="hidden"
                     animate={inView ? "visible" : "hidden"}
                 >
-                    {loading ? (
-                        [...Array(8)].map((_, i) => <ProductCardSkeleton key={i} />)
-                    ) : (
-                        products.map((product, index) => (
-                            <ProductCard key={product.id} product={product} index={index} />
-                        ))
-                    )}
+                    {products.map((product) => (
+                        <ProductCard key={product.id} product={product} />
+                    ))}
                 </motion.div>
 
-                <motion.div
-                    className="text-center mt-12 md:mt-20"
-                    initial={{ opacity: 0 }}
-                    animate={inView ? { opacity: 1 } : { opacity: 0 }}
-                    transition={{ delay: 0.8 }}
-                >
-                    <button className="text-sm md:text-base border-b-2 border-brown-800 text-brown-800 pb-1 hover:text-gold-600 hover:border-gold-600 transition-all font-medium tracking-wide">
-                        VIEW ALL PRODUCTS
+                {/* Mobile View All Button */}
+                <div className="mt-12 text-center md:hidden">
+                    <button className="btn-secondary w-full">
+                        View All Products
                     </button>
-                </motion.div>
+                </div>
             </div>
         </section>
     );

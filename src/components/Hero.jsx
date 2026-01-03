@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { PiArrowRightLight, PiStarFill } from 'react-icons/pi';
@@ -19,45 +19,39 @@ const Hero = () => {
         threshold: 0.1
     });
 
-    // Typewriter effect
-    const [typewriterText, setTypewriterText] = useState('');
-    const fullText = 'Where Beauty Blooms';
-
-    useEffect(() => {
-        let index = 0;
-        const timer = setInterval(() => {
-            if (index <= fullText.length) {
-                setTypewriterText(fullText.substring(0, index));
-                index++;
-            } else {
-                clearInterval(timer);
-            }
-        }, 100);
-
-        return () => clearInterval(timer);
-    }, []);
-
     return (
-        <section className="relative pt-32 pb-20 px-4 overflow-hidden bg-gradient-to-br from-cream via-gold-50 to-brown-50 min-h-screen flex items-center">
-            {/* Floating Shapes Background */}
-            <FloatingShapes />
+        <section className="relative min-h-screen flex items-center overflow-hidden bg-cream">
+            {/* Layer 0: Atmospheric Background Image (Right Side) */}
+            <motion.div
+                className="absolute top-0 right-0 w-full md:w-[65%] h-full z-0"
+                style={{ y: y1 }}
+            >
+                <div className="relative w-full h-full">
+                    <img
+                        src={heroImage}
+                        alt="LOOLA Jewelry Collection"
+                        className="w-full h-full object-cover object-center"
+                    />
+                    {/* Cinematic Gradient Mask: Fades image into cream background on the left */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-cream via-cream/80 to-transparent sm:via-cream/40" />
 
-            {/* Animated Gradient Mesh (Hardware Accelerated) */}
-            <div className="absolute inset-0 opacity-30 select-none pointer-events-none">
-                <motion.div
-                    className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-gold-400 to-gold-600 rounded-full blur-3xl will-change-transform"
-                    style={{ y: y1 }}
-                ></motion.div>
-                <motion.div
-                    className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-brown-400 to-brown-600 rounded-full blur-3xl will-change-transform"
-                    style={{ y: y2 }}
-                ></motion.div>
+                    {/* Bottom fade for smooth transition to next section */}
+                    <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-cream to-transparent" />
+                </div>
+            </motion.div>
+
+            {/* Floating Shapes - Now more subtle in background */}
+            <div className="absolute inset-0 z-0 opacity-60 pointer-events-none">
+                <FloatingShapes />
             </div>
 
-            <div className="max-w-7xl mx-auto relative z-10" ref={ref}>
-                <div className="grid md:grid-cols-2 gap-12 items-center">
-                    {/* Left Content */}
+            {/* Layer 1: Content Container */}
+            <div className="max-w-7xl mx-auto px-4 w-full relative z-10" ref={ref}>
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+
+                    {/* Left Content - Takes up 7 columns on desktop */}
                     <motion.div
+                        className="md:col-span-7 lg:col-span-6 pt-20 md:pt-0"
                         variants={slideInLeft}
                         initial="hidden"
                         animate={inView ? "visible" : "hidden"}
@@ -83,41 +77,69 @@ const Hero = () => {
                             <span className="text-sm text-brown-600 font-medium">7,190+ Happy Customers</span>
                         </motion.div>
 
-                        <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl font-bold text-brown-900 mb-6 leading-tight">
-                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-brown-900 to-brown-700">
-                                {typewriterText}
-                            </span>
-                            <motion.span
-                                className="inline-block w-1 h-16 md:h-20 lg:h-24 bg-gold-600 ml-2"
-                                animate={{ opacity: [1, 0] }}
-                                transition={{ duration: 0.8, repeat: Infinity, repeatType: 'reverse' }}
-                            />
-                        </h1>
+                        <motion.h1
+                            className="font-serif text-6xl md:text-7xl lg:text-9xl font-bold text-brown-900 mb-8 leading-[0.9] flex flex-wrap tracking-tight"
+                            variants={{
+                                hidden: { opacity: 0 },
+                                visible: {
+                                    opacity: 1,
+                                    transition: { staggerChildren: 0.05, delayChildren: 0.2 }
+                                }
+                            }}
+                            initial="hidden"
+                            animate="visible"
+                        >
+                            {"Where Beauty Blooms".split(" ").map((word, wordIndex) => (
+                                <span key={wordIndex} className="inline-block mr-4 whitespace-nowrap">
+                                    {word.split("").map((char, charIndex) => (
+                                        <motion.span
+                                            key={charIndex}
+                                            className="inline-block bg-clip-text text-transparent bg-gradient-to-br from-brown-900 to-gold-900"
+                                            variants={{
+                                                hidden: { opacity: 0, y: 40, rotateX: 90 },
+                                                visible: {
+                                                    opacity: 1,
+                                                    y: 0,
+                                                    rotateX: 0,
+                                                    transition: {
+                                                        type: "spring",
+                                                        damping: 20,
+                                                        stiffness: 100
+                                                    }
+                                                }
+                                            }}
+                                        >
+                                            {char}
+                                        </motion.span>
+                                    ))}
+                                </span>
+                            ))}
+                        </motion.h1>
 
                         <motion.p
-                            className="text-xl md:text-2xl text-brown-600 mb-8 leading-relaxed"
+                            className="text-xl md:text-2xl text-brown-700 mb-10 leading-relaxed max-w-xl font-light"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 3, duration: 0.6 }}
+                            transition={{ delay: 1, duration: 0.8 }}
                         >
-                            Discover our exquisite collection of <span className="font-semibold text-gold-700">anti-tarnish jewelry</span>,
-                            elegant watches, and premium accessories. Where luxury meets affordability.
+                            Discover our exquisite collection of <span className="font-medium text-gold-700">anti-tarnish jewelry</span>,
+                            elegant watches, and premium accessories.
                         </motion.p>
 
                         <motion.div
-                            className="flex flex-col sm:flex-row gap-4 mb-12"
+                            className="flex flex-col sm:flex-row gap-5 mb-16"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 3.5, duration: 0.6 }}
+                            transition={{ delay: 1.2, duration: 0.6 }}
                         >
                             <motion.button
-                                className="btn-primary group relative overflow-hidden"
+                                className="btn-primary group relative overflow-hidden bg-brown-900 text-white px-8 py-4"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
-                                <span className="relative z-10 flex items-center justify-center">
+                                <span className="relative z-10 flex items-center justify-center text-lg tracking-wide">
                                     Shop Collection
-                                    <PiArrowRightLight className="inline-block ml-2 group-hover:translate-x-1 transition-transform" />
+                                    <PiArrowRightLight className="inline-block ml-3 group-hover:translate-x-1 transition-transform" />
                                 </span>
                                 <motion.div
                                     className="absolute inset-0 bg-gradient-to-r from-gold-600 to-gold-700"
@@ -127,7 +149,7 @@ const Hero = () => {
                                 />
                             </motion.button>
                             <motion.button
-                                className="btn-secondary"
+                                className="px-8 py-4 rounded-full border border-brown-300 text-brown-800 font-medium hover:bg-brown-50 transition-colors text-lg"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
@@ -137,89 +159,47 @@ const Hero = () => {
 
                         {/* Animated Statistics */}
                         <motion.div
-                            className="grid grid-cols-3 gap-6"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 4, duration: 0.6 }}
+                            className="flex gap-12 border-t border-brown-200/50 pt-8"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 1.5, duration: 0.8 }}
                         >
-                            <div className="text-center">
-                                <div className="text-4xl md:text-5xl font-bold text-gold-600">
+                            <div>
+                                <div className="text-3xl font-bold text-brown-900 font-serif">
                                     <AnimatedCounter end={163} suffix="+" />
                                 </div>
-                                <p className="text-sm md:text-base text-brown-600 mt-2">Products</p>
+                                <p className="text-sm text-brown-500 uppercase tracking-wider mt-1">Products</p>
                             </div>
-                            <div className="text-center">
-                                <div className="text-4xl md:text-5xl font-bold text-gold-600">
-                                    <AnimatedCounter end={7.1} suffix="K+" duration={2.5} />
+                            <div>
+                                <div className="text-3xl font-bold text-brown-900 font-serif">
+                                    <AnimatedCounter end={7.1} suffix="K" duration={2.5} />
                                 </div>
-                                <p className="text-sm md:text-base text-brown-600 mt-2">Followers</p>
-                            </div>
-                            <div className="text-center">
-                                <div className="text-4xl md:text-5xl font-bold text-gold-600">
-                                    <AnimatedCounter end={4.9} suffix="★" duration={2} />
-                                </div>
-                                <p className="text-sm md:text-base text-brown-600 mt-2">Rating</p>
+                                <p className="text-sm text-brown-500 uppercase tracking-wider mt-1">Customers</p>
                             </div>
                         </motion.div>
                     </motion.div>
 
-                    {/* Right Image with Advanced Effects */}
-                    <motion.div
-                        variants={slideInRight}
-                        initial="hidden"
-                        animate={inView ? "visible" : "hidden"}
-                        className="relative"
-                    >
+                    {/* Right side spacer for image */}
+                    <div className="hidden md:block md:col-span-5 lg:col-span-6 relative h-full">
+                        {/* Floating Badge moved here, absolutely positioned relative to container */}
                         <motion.div
-                            className="relative will-change-transform"
-                            style={{ y: imageY }}
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            {/* Glowing background */}
-                            <motion.div
-                                className="absolute -inset-4 bg-gradient-to-r from-gold-300 to-brown-300 rounded-3xl blur-2xl"
-                                animate={{
-                                    opacity: [0.3, 0.5, 0.3],
-                                    scale: [1, 1.1, 1]
-                                }}
-                                transition={{
-                                    duration: 4,
-                                    repeat: Infinity,
-                                    repeatType: 'reverse'
-                                }}
-                            />
-
-                            <img
-                                src={heroImage}
-                                alt="LOOLA Jewelry Collection"
-                                className="relative rounded-3xl shadow-2xl w-full object-cover transform hover:rotate-1 transition-transform duration-300"
-                            />
-                        </motion.div>
-
-                        {/* Floating Badge with animation */}
-                        <motion.div
-                            className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-2xl p-6"
-                            initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                            className="absolute bottom-20 right-10 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-5 border border-white/40 max-w-xs cursor-pointer z-20"
+                            initial={{ opacity: 0, y: 50, scale: 0.9 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
-                            transition={{ delay: 4.5, duration: 0.6 }}
-                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ delay: 2, duration: 0.8 }}
+                            whileHover={{ y: -5 }}
                         >
-                            <div className="flex items-center space-x-3">
-                                <motion.div
-                                    className="w-14 h-14 bg-gradient-to-r from-gold-400 to-gold-600 rounded-full flex items-center justify-center text-2xl"
-                                    animate={{ rotate: [0, 360] }}
-                                    transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                                >
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 bg-gold-100 rounded-full flex items-center justify-center text-2xl">
                                     🚚
-                                </motion.div>
+                                </div>
                                 <div>
-                                    <p className="font-semibold text-brown-800 text-lg">Free Delivery</p>
-                                    <p className="text-sm text-brown-600">All India Available</p>
+                                    <p className="font-serif font-bold text-brown-900 text-lg leading-none mb-1">Free Delivery</p>
+                                    <p className="text-xs text-brown-600 font-medium">On all prepaid orders</p>
                                 </div>
                             </div>
                         </motion.div>
-                    </motion.div>
+                    </div>
                 </div>
             </div>
         </section>
