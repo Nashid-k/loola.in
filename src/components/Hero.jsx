@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { FiArrowRight, FiStar } from 'react-icons/fi';
 import AnimatedCounter from './AnimatedCounter';
 import FloatingShapes from './FloatingShapes';
-import useScrollPosition from '../hooks/useScrollPosition';
 import { fadeInUp, slideInLeft, slideInRight } from '../utils/animations';
 import heroImage from '../assets/images/hero-image.png';
 
 const Hero = () => {
-    const scrollPosition = useScrollPosition();
+    // Optimized Scroll Hook (No re-renders)
+    const { scrollY } = useScroll();
+    const y1 = useTransform(scrollY, [0, 500], [0, 250]); // Parallax for bg 1
+    const y2 = useTransform(scrollY, [0, 500], [0, -250]); // Parallax for bg 2
+    const imageY = useTransform(scrollY, [0, 500], [0, -100]); // Parallax for hero image
+
     const [ref, inView] = useInView({
         triggerOnce: true,
         threshold: 0.1
@@ -33,24 +37,21 @@ const Hero = () => {
         return () => clearInterval(timer);
     }, []);
 
-    // Parallax offset
-    const parallaxOffset = scrollPosition * 0.5;
-
     return (
         <section className="relative pt-32 pb-20 px-4 overflow-hidden bg-gradient-to-br from-cream via-gold-50 to-brown-50 min-h-screen flex items-center">
             {/* Floating Shapes Background */}
             <FloatingShapes />
 
-            {/* Animated Gradient Mesh */}
-            <div className="absolute inset-0 opacity-30">
-                <div
-                    className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-gold-400 to-gold-600 rounded-full blur-3xl"
-                    style={{ transform: `translateY(${parallaxOffset}px)` }}
-                ></div>
-                <div
-                    className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-brown-400 to-brown-600 rounded-full blur-3xl"
-                    style={{ transform: `translateY(${-parallaxOffset}px)` }}
-                ></div>
+            {/* Animated Gradient Mesh (Hardware Accelerated) */}
+            <div className="absolute inset-0 opacity-30 select-none pointer-events-none">
+                <motion.div
+                    className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-gold-400 to-gold-600 rounded-full blur-3xl will-change-transform"
+                    style={{ y: y1 }}
+                ></motion.div>
+                <motion.div
+                    className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-brown-400 to-brown-600 rounded-full blur-3xl will-change-transform"
+                    style={{ y: y2 }}
+                ></motion.div>
             </div>
 
             <div className="max-w-7xl mx-auto relative z-10" ref={ref}>
@@ -170,7 +171,8 @@ const Hero = () => {
                         className="relative"
                     >
                         <motion.div
-                            className="relative"
+                            className="relative will-change-transform"
+                            style={{ y: imageY }}
                             whileHover={{ scale: 1.05 }}
                             transition={{ duration: 0.3 }}
                         >
@@ -192,7 +194,6 @@ const Hero = () => {
                                 src={heroImage}
                                 alt="LOOLA Jewelry Collection"
                                 className="relative rounded-3xl shadow-2xl w-full object-cover transform hover:rotate-1 transition-transform duration-300"
-                                style={{ transform: `translateY(${parallaxOffset * -0.5}px)` }}
                             />
                         </motion.div>
 
