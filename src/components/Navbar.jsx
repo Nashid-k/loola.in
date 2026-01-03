@@ -16,7 +16,7 @@ const Navbar = () => {
     const navbarBg = useTransform(
         scrollY,
         [0, 50],
-        ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.7)']
+        ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.95)']
     );
 
     const navbarBorder = useTransform(
@@ -59,7 +59,7 @@ const Navbar = () => {
                             <img src={brandLogo} alt="LOOLA.in" className="h-full w-full object-cover" />
                         </div>
                         <div className="flex flex-col">
-                            <h1 className="text-xl md:text-2xl font-serif font-bold text-brown-900 tracking-tight leading-none">
+                            <h1 className="text-xl md:text-2xl font-serif font-bold text-brown-900 tracking-tight leading-none text-shadow-sm">
                                 LOOLA<span className="text-gold-600">.in</span>
                             </h1>
                         </div>
@@ -71,7 +71,7 @@ const Navbar = () => {
                             <a
                                 key={item}
                                 href={`#${item.toLowerCase()}`}
-                                className="text-sm font-medium text-brown-800/80 hover:text-gold-700 transition-colors tracking-wide"
+                                className="text-sm font-medium text-brown-900 hover:text-gold-700 transition-colors tracking-wide"
                             >
                                 {item}
                             </a>
@@ -121,14 +121,14 @@ const Navbar = () => {
                     initial={false}
                     animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
                     transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} // Apple-like easing
-                    className="md:hidden overflow-hidden bg-white/50 backdrop-blur-md border-t border-white/20"
+                    className="md:hidden overflow-hidden bg-white/95 backdrop-blur-xl border-t border-white/20 shadow-xl"
                 >
                     <div className="flex flex-col space-y-1 py-4 px-2">
                         {['Home', 'Shop', 'Categories', 'About', 'Contact'].map((item, index) => (
                             <motion.a
                                 key={item}
                                 href={`#${item.toLowerCase()}`}
-                                className="text-base font-medium text-brown-900 px-4 py-3 rounded-lg hover:bg-white/40 active:bg-white/60 transition-colors"
+                                className="text-base font-medium text-brown-900 px-4 py-3 rounded-lg hover:bg-black/5 active:bg-black/10 transition-colors"
                                 initial={{ x: -10, opacity: 0 }}
                                 animate={isOpen ? { x: 0, opacity: 1 } : { x: -10, opacity: 0 }}
                                 transition={{ delay: index * 0.05 }}
@@ -139,7 +139,7 @@ const Navbar = () => {
                         ))}
                         <div className="flex justify-around pt-4 border-t border-brown-100/30">
                             {[PiMagnifyingGlassLight, PiHeartLight, PiUserLight, PiShoppingBagLight].map((Icon, index) => (
-                                <button key={index} className="p-3 bg-white/40 rounded-full shadow-sm">
+                                <button key={index} className="p-3 bg-black/5 rounded-full shadow-sm hover:bg-black/10 transition-colors">
                                     <Icon className="w-5 h-5 text-brown-900" />
                                 </button>
                             ))}

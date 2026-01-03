@@ -38,7 +38,7 @@ const Newsletter = () => {
                     animate={inView ? { scale: 1, opacity: 1 } : { scale: 0.9, opacity: 0 }}
                     transition={{ delay: 0.2, duration: 0.8 }}
                 >
-                    <span className="text-gold-500 text-xs font-semibold tracking-[0.3em] uppercase">
+                    <span className="text-gold-300 text-xs font-semibold tracking-[0.3em] uppercase">
                         Exclusive Access
                     </span>
                 </motion.div>
